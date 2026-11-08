@@ -1,53 +1,38 @@
 # RealRednecks.de
 
-**Wannabe a Redneck?** A parody selfie-rating website with a locally animated "Redneck-O-Meter".
+Wannabe a Redneck? A static, client-side Redneck-O-Meter. The score is a parody and not an analysis of someone's identity.
 
-## What it does
-- Local photo picker and drag-and-drop
-- Animated hammer strike and 0–100% meter
-- Humorous captions and downloadable PNG results
-- No backend, analytics, facial recognition or photo upload
-- The numbers are a visual joke, not a classification of a person's identity or background
+## Hosting: Cloudflare Workers (NOT Pages)
 
-## Hosting: Cloudflare Pages (connected to GitHub)
+- GitHub repository: `misterficker33/wannabe-a-redneck`
+- Default branch: `main`
+- Worker name: `realrednecks`
+- Wrangler config: `wrangler.jsonc`
+- Static asset folder: `dist`
 
-Repository: `misterficker33/wannabe-a-redneck`
-Branch: `main`
+**Connect Cloudflare Workers Builds to this GitHub repository**, using the production branch `main`.
 
-In [Cloudflare Workers & Pages](https://dash.cloudflare.com/), select **Create application → Pages → Import an existing Git repository**. Select this repository and use these settings:
+- Build command: `sh build.sh`
+- Deploy command: `npx wrangler deploy`
+- Root directory: repository root
 
-| Setting | Value |
-| --- | --- |
-| Project name | `wannabe-a-redneck` (or any available name) |
-| Production branch | `main` |
-| Framework preset | `None` |
-| Build command | `sh build.sh` |
-| Build output directory | `dist` |
-| Root directory | repository root (default) |
+Workers Builds automatically deploys new commits after the repository is connected and authorization is completed.
 
-The build script copies `index.html` into `dist/index.html`. Cloudflare automatically deploys each new push to `main` after its Git integration is authorized.
+You can also run `sh build.sh && npx wrangler deploy` on a logged-in local machine with Wrangler.
 
-The initial deployment should provide a `*.pages.dev` URL to test first.
+## Custom domain
 
-## Domain: realrednecks.de (registered at netcup)
+After a successful Worker deployment, assign `realrednecks.de` under the Worker's **Settings → Domains & Routes → Add → Custom Domain**.
 
-1. Add `realrednecks.de` as a zone in the **same Cloudflare account** used for Pages if it is not already present.
-2. For the apex domain, netcup must delegate to the **exact two Cloudflare nameservers assigned to your zone**. In netcup CCP, update the domain's nameserver settings as appropriate for the domain/CloudDNS product. Do **not** use guessed nameserver names.
-3. In the Cloudflare Pages project, go to **Custom domains → Set up a domain**, enter `realrednecks.de`, and complete the verification. With the zone active in Cloudflare, Cloudflare creates the needed DNS record automatically.
-4. You may additionally add `www.realrednecks.de` as a custom domain if desired.
-5. Preserve any existing email-related MX/TXT records when migrating DNS management.
+For that to work, `realrednecks.de` must be an **active zone** in the same Cloudflare account, with nameservers correctly delegated by its registrar netcup. Cloudflare automatically handles the DNS target and certificate for a Worker custom domain; don't enter speculative DNS records.
 
-DNS delegation can take time to propagate. Verify HTTPS and the exact hostname after activation.
+Preserve email-related MX/TXT/DKIM/SPF records during any DNS migration.
 
-Official docs:
-- https://developers.cloudflare.com/pages/framework-guides/deploy-anything/
-- https://developers.cloudflare.com/pages/configuration/custom-domains/
-- https://www.netcup.com/de/helpcenter/dokumentation/domain/eigene-nameserver-cloud-dns
+## Privacy
 
-## Local development
+All image processing happens inside the visitor's browser. The file is never uploaded. No facial recognition, demographic classification, or backend is used.
 
-Open `index.html` in a browser. No external dependencies or build tools are needed.
-
-## Privacy and disclaimer
-
-The browser processes the selected photo locally. The rating is a deterministic gag and **not** a real-world assessment.
+## Docs
+- https://developers.cloudflare.com/workers/static-assets/get-started/
+- https://developers.cloudflare.com/workers/ci-cd/builds/configuration/
+- https://developers.cloudflare.com/workers/configuration/routing/custom-domains/
