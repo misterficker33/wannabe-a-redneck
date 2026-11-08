@@ -20,7 +20,7 @@ jobs:
           dig +time=3 +tries=1 +short NS realrednecks.de
           echo '=== Registry path ==='
           dig +time=3 +tries=1 +trace NS realrednecks.de | tail -n 22
-          for domain in realrednecks.de www.realrednecks.de; do
+          for domain in realrednecks.de; do
             echo "=== ${domain}: DNS at Cloudflare 1.1.1.1 ==="
             dig @1.1.1.1 +time=3 +tries=1 "${domain}" A
             dig @1.1.1.1 +time=3 +tries=1 +short "${domain}" CNAME
