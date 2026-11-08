@@ -1,0 +1,38 @@
+name: Check RealRednecks DNS and HTTPS
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/domain-check.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Check delegated nameservers, DNS and live content
+        shell: bash
+        run: |
+          set +e
+          echo '=== Nameserver delegation: realrednecks.de ==='
+          dig +time=3 +tries=1 +short NS realrednecks.de
+          echo '=== Registry path ==='
+          dig +time=3 +tries=1 +trace NS realrednecks.de | tail -n 22
+          for domain in realrednecks.de www.realrednecks.de; do
+            echo "=== ${domain}: DNS at Cloudflare 1.1.1.1 ==="
+            dig @1.1.1.1 +time=3 +tries=1 "${domain}" A
+            dig @1.1.1.1 +time=3 +tries=1 +short "${domain}" CNAME
+            echo "=== ${domain}: DNS at Google 8.8.8.8 ==="
+            dig @8.8.8.8 +time=3 +tries=1 +short "${domain}" A
+            echo "=== ${domain}: HTTPS test ==="
+            curl --max-time 12 --connect-timeout 5 -sSL -o /tmp/body.html -w 'HTTP=%{http_code} IP=%{remote_ip} TLS=%{ssl_verify_result}\n' "https://${domain}"
+            status=$?
+            echo "curl_exit=${status}"
+            if [ "${status}" -eq 0 ]; then
+              echo 'Site has Redneck-O-Meter content?'
+              if grep -iq 'REDNECK-O-METER' /tmp/body.html; then echo yes; else echo no; fi
+            fi
+          done
+          echo 'Diagnostics complete (read-only)'
