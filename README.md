@@ -36,3 +36,14 @@ All image processing happens inside the visitor's browser. The file is never upl
 - https://developers.cloudflare.com/workers/static-assets/get-started/
 - https://developers.cloudflare.com/workers/ci-cd/builds/configuration/
 - https://developers.cloudflare.com/workers/configuration/routing/custom-domains/
+
+## Verified launch diagnostics (2026-11-08, GitHub Actions)
+
+The read-only GitHub Actions check at [run 42527502995](https://github.com/misterficker33/wannabe-a-redneck/actions/runs/42527502995) found:
+
+- **Registry nameservers:** `netcup.firstns.cc`, `netcup.secondns.at`, `netcup.thirdns.de`, `netcup.fourthns.systems`, `netcup.fifthns.com`. The domain is still delegated to netcup, not Cloudflare.
+- **Apex A record:** `realrednecks.de → 46.38.243.234` (netcup DNS target, not the Worker custom domain).
+- **WWW:** `www.realrednecks.de` returned `NXDOMAIN`.
+- **HTTPS:** The root request timed out; WWW could not be resolved.
+
+To make this Cloudflare Worker public on both hostnames, first activate the `realrednecks.de` zone in Cloudflare and replace the nameserver delegation **at netcup** with the **exact assigned pair displayed by Cloudflare**. Preserve existing email records. Then redeploy the Worker so the `custom_domain` routes in `wrangler.jsonc` can be provisioned. Note that two Workers Builds projects are currently connected to the repository (`wannabe-a-redneck` and `wannabe-a-redneck8`); choose the intended deployment target in Cloudflare.
