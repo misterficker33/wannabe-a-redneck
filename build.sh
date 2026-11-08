@@ -1,5 +1,5 @@
 #!/bin/sh
 set -eu
-mkdir -p dist
-cp index.html dist/index.html
-printf 'Cloudflare Pages: prepared dist/index.html\n'
+mkdir -p public
+cp index.html public/index.html
+printf 'Cloudflare Workers: prepared public/index.html\n'
