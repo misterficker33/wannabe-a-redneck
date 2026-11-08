@@ -8,11 +8,11 @@ Wannabe a Redneck? A static, client-side Redneck-O-Meter. The score is a parody 
 - Default branch: `main`
 - Worker name: `realrednecks`
 - Wrangler config: `wrangler.jsonc`
-- Static asset folder: `dist`
+- Static asset folder: `public`
 
 **Connect Cloudflare Workers Builds to this GitHub repository**, using the production branch `main`.
 
-- Build command: `sh build.sh`
+- Build command: `sh build.sh` (optional)
 - Deploy command: `npx wrangler deploy`
 - Root directory: repository root
 
