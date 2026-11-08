@@ -8,10 +8,6 @@
     {
       "pattern": "realrednecks.de",
       "custom_domain": true
-    },
-    {
-      "pattern": "www.realrednecks.de",
-      "custom_domain": true
     }
   ]
 }
