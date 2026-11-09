@@ -20,6 +20,15 @@ Workers Builds automatically deploys new commits after the repository is connect
 
 You can also run `sh build.sh && npx wrangler deploy` on a logged-in local machine with Wrangler.
 
+## GitHub Pages mirror
+
+The same static site is additionally publishable via GitHub Pages (no Cloudflare account needed):
+
+1. In the repository: **Settings → Pages → Source: GitHub Actions**.
+2. Merge the branch that adds `.github/workflows/pages.yml` and relative links.
+
+The site then goes live at `https://misterficker33.github.io/wannabe-a-redneck/`.
+
 ## Custom domain
 
 After a successful Worker deployment, assign `realrednecks.de` under the Worker's **Settings → Domains & Routes → Add → Custom Domain**.
